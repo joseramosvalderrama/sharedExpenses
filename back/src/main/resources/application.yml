@@ -1,0 +1,23 @@
+micronaut:
+  application:
+    name: sharedExpenses
+netty:
+  default:
+    allocator:
+      max-order: 3
+---
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:mysql://localhost:3306/expenses`}
+    username: ${JDBC_USER:root}
+    password: ${JDBC_PASSWORD:pass}
+    dialect: MYSQL
+    driverClassName: ${JDBC_DRIVER:com.mysql.cj.jdbc.Driver}
+---
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create-drop
+        show_sql: true
