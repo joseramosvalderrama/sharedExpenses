@@ -1,6 +1,6 @@
 export default interface Expense{
-    name: string,
-    expense: number,
+    person: string,
+    cost: number,
     description: string,
-    date: Date
+    date: number
 }

@@ -1,33 +1,84 @@
 import React, {Component, ReactNode} from 'react';
-import './App.css';
 import http from 'RestClient';
 import IExpense from 'IExpense';
 import Expense from 'Expense';
 import { Link } from 'react-router-dom';
+import Balance from 'Balance';
 
-class App extends Component<any,[IExpense]>{
+interface IState{
+  expenses: IExpense[],
+  balances: IBalance[]
+}
+
+interface IBalance{
+  name: string,
+  balance: number
+}
+
+class App extends Component<any, IState>{
 
   constructor(props:any){
     super(props);
-    this.retrieveData();
+    this.state = {
+      expenses: [],
+      balances: []
+    }
   }
 
-  async retrieveData(){
-    const data = await http<[IExpense]>('/expenses', 'GET');
-    this.state = data;
+  async componentDidMount(){
+    this.retrieveExpenses();
+    this.retrieveBalances();
+  }
+
+  async retrieveBalances(){
+    try{
+      const balances = await http<IBalance[]>('/person', 'GET');
+      const newState = {...this.state};
+      newState.balances = balances;
+      this.setState(newState);
+    }
+    catch(error){
+      alert(error);
+    }
+  }
+
+  async retrieveExpenses(){
+    try{
+      const expenses = await http<IExpense[]>('/expense', 'GET');
+      expenses.sort((a,b) => b.date - a.date);
+      const newState = {...this.state};
+      newState.expenses = expenses;
+      this.setState(newState);
+    }
+    catch(error){
+      alert(error);
+    }
   }
 
   render(): ReactNode {
     return(
       <div className='App'>
-        <div className='link'>
-          <Link to="/person/new">Añadir amigo</Link>
-          <Link to="/expense/new">Añadir gasto</Link>
+        <h1>Gastos compartidos</h1>
+        <div className='links'>
+          <div className='link'>
+            <Link to="/person/new">Añadir amigo</Link>
+          </div>
+          <div className='link'>
+            <Link to="/expense/new">Añadir gasto</Link>
+          </div>
         </div>
         <div className='expenses'>
           {
-            this.state.map(el => {
-              return <Expense name = {el.name} expense = {el.expense} description = {el.description} date = {el.date} />;
+            this.state.expenses.map(el => {
+              return <Expense person = {el.person} cost = {el.cost} description = {el.description} date = {el.date} />;
+            })
+          }
+        </div>
+        <div className='balances'>
+          <h3>Balance</h3>
+          {
+            this.state.balances.map(el => {
+              return <Balance name={el.name} balance={el.balance}/>;
             })
           }
         </div>

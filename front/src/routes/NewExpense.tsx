@@ -1,60 +1,117 @@
 import React from 'react';
 import http from 'RestClient';
 import IExpense from 'IExpense';
+import Select, { OptionsOrGroups } from 'react-select';
 
-class NewExpense extends React.Component<any, IExpense>{
+interface IState{
+    expense: {
+        cost: number,
+        description: string,
+        date: Date
+    },
+    people: IPerson[],
+    selectedPerson: Option | null
+}
+
+interface IPerson{
+    id: number,
+    name: string
+}
+
+interface Option{
+    label: string,
+    value: number
+}
+
+class NewExpense extends React.Component<any, IState>{
 
     constructor(props: any){
         super(props);
+        this.state = {
+            expense: {
+                cost: 0,
+                description: '',
+                date: new Date()
+            },
+            people: [],
+            selectedPerson: null
+        }
     }
 
-    async handleSubmit(){
-        const newState = {...this.state};
-        newState.date = new Date();
+    async componentDidMount(){
         try{
-            await http('/person', 'POST', this.state);
-        }
-        catch(error){
+            const people = await http<IPerson[]>('/person', 'GET');
+            const newState = {...this.state};
+            newState.people = people;
+            newState.selectedPerson = {value: people[0].id, label: people[0].name};
+            this.setState(newState);
+          }
+          catch(error){
             alert(error);
         }
     }
 
+    handleSubmit = async () => {
+        const expense = {...this.state.expense};
+        expense.date = new Date();
+        const personId = this.state.selectedPerson?.value;
+        try{
+            await http('/person/' + personId + '/expense', 'POST', expense);
+        }
+        catch(error: any){
+            if(!error.contains("Failed to fetch")){
+                alert(error);
+            }
+        }
+    }
 
-    handleNameChange(event: { target: { value: string; }; }){
+    handleExpenseChange = (event: { target: { value: string; }; }) => {
         const newState = {...this.state};
-        newState.name = event.target.value;
+        newState.expense.cost = +event.target.value;
         this.setState(newState);
     }
 
-    handleExpenseChange(event: { target: { value: number; }; }){
+    handleDescriptionChange = (event: { target: { value: string; }; }) => {
         const newState = {...this.state};
-        newState.expense = event.target.value;
+        newState.expense.description = event.target.value;
         this.setState(newState);
     }
 
-    handleDescriptionChange(event: { target: { value: string; }; }){
+    handlePersonChange = (option: Option | null) => {
         const newState = {...this.state};
-        newState.description = event.target.value;
+        newState.selectedPerson = option;
         this.setState(newState);
     }
 
     render(){
+        const peopleOptions: Option[] = 
+            this.state.people.map(el => {
+                return {value: el.id, label: el.name}
+            });
+
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Name:
-                    <input type="text" value={this.state.name} onChange={this.handleNameChange}/>
-                </label>
-                <label>
-                    Expense:
-                    <input type="number" value={this.state.expense} onChange={this.handleExpenseChange} />
-                </label>
-                <label>
-                    Description:
-                    <input type="number" value={this.state.description} onChange={this.handleDescriptionChange} />
-                </label>
-                <input type="submit" value="Submit" />
-          </form>
+            <div className='form'>
+                <form onSubmit={this.handleSubmit} action="/">
+                    <h2>Nuevo gasto</h2>
+                    <label>
+                        Cost (€):
+                        <input type="number" min="0.01" value={this.state.expense.cost} onChange={this.handleExpenseChange}/>
+                    </label>
+                    <label>
+                        Description:
+                        <input required type="text" value={this.state.expense.description} onChange={this.handleDescriptionChange} />
+                    </label>
+                    <label>   
+                        Person:                 
+                        <Select
+                            options={peopleOptions}
+                            value={this.state.selectedPerson}
+                            onChange={this.handlePersonChange}
+                        />
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
         );
     }
 }

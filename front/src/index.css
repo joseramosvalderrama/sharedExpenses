@@ -11,3 +11,88 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App{
+  padding: 0.5 rem;
+  margin: 0.5 rem;
+}
+
+.links{
+  margin: 0.5rem;
+  left: 86%;
+  position: relative;
+  padding: 0.5rem
+}
+
+.link{
+  padding: 0.5rem;
+  display: inline;
+}
+
+.expenses{
+  margin: 0.25rem;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.expense{
+  padding: 0.75rem;
+  margin: 0.5rem;
+  border: 1px solid #000;
+}
+
+.balances{
+  padding: 1rem;
+}
+
+.balancePositive{
+  padding: 0.25rem;
+  color: #4CAF50;
+}
+
+.balanceNegative{
+  padding: 0.25rem;
+  color: red;
+}
+
+h1{
+  text-align: center;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=number], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form{
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}

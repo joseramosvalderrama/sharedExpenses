@@ -1,6 +1,10 @@
 micronaut:
   application:
     name: sharedExpenses
+  server:
+    cors:
+      enabled: true
+---
 netty:
   default:
     allocator:
