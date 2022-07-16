@@ -1,5 +1,7 @@
 package es.jmrv.service;
 
+import es.jmrv.dto.ExpenseDto;
+import es.jmrv.dto.PersonDto;
 import es.jmrv.entity.Expense;
 import es.jmrv.entity.Person;
 import es.jmrv.repository.ExpenseRepository;
@@ -9,8 +11,10 @@ import io.micronaut.runtime.server.event.ServerStartupEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -25,21 +29,26 @@ public class ExpenseService {
     @EventListener
     void onStartup(ServerStartupEvent event) {
         if(StreamSupport.stream(personRepository.findAll().spliterator(), false).count() == 0){
-            Person p1 = new Person("Pepito", 0);
-            Person p2 = new Person("Manolito", 0);
-
             Random random = new Random();
+            Person p1 = new Person("Pepito");
+            Person p2 = new Person("Manolito");
+
             StreamSupport.stream(this.personRepository.saveAll(Arrays.asList(p1, p2)).spliterator(), false)
                     .forEach(p -> {
-                        Expense expense = new Expense();
                         double cost = random.nextDouble(10);
-                        expense.setCost(cost);
-                        expense.setDescription("Example");
-                        expense.setDate(new Date());
-                        this.updateBalances(p, cost);
-                        this.saveExpense(p.getId(), new Expense());
+                        Expense expense = new Expense(cost, "Expense by " + p.getName(), new Date());
+                        this.saveExpense(p.getId(), expense);
                     });
         }
+    }
+
+    public List<ExpenseDto> getExpensesDto(){
+        List<ExpenseDto> expenseDtos = new ArrayList<>();
+        this.getExpenses().stream()
+                .forEach(e -> {
+                    expenseDtos.add(new ExpenseDto(e.getId(), e.getCost(), e.getDescription(), e.getDate(), e.getPerson().getName()));
+                });
+        return expenseDtos;
     }
 
     public List<Expense> getExpenses() {
@@ -50,13 +59,31 @@ public class ExpenseService {
         return this.personRepository.save(person);
     }
 
-    public Expense saveExpense(long personId, @Valid Expense expense) {
-        Person person = this.personRepository.findById(personId).get();
+    @Transactional
+    public void saveExpense(long personId, Expense expense) {
+        Person person = this.findPersonById(personId).get();
         expense.setPerson(person);
-        return this.expenseRepository.save(expense);
+        this.expenseRepository.save(expense);
+        //person.addExpense(expense);
+        //this.personRepository.update(person);
+        this.updateBalances();
     }
 
-    public List<Person> findPersonBalances() {
+    private void updateBalances() {
+        Iterable<Person> personIterable = this.personRepository.findAll();
+        long totalPeople = StreamSupport.stream(personIterable.spliterator(), false).count();
+        double individualPart = this.getTotalCost() / totalPeople;
+        StreamSupport.stream(personIterable.spliterator(), false).forEach((p) -> {
+            p.updateBalance(individualPart);
+        });
+        this.personRepository.updateAll(personIterable);
+    }
+
+    public List<PersonDto> findPeopleDtos(){
+        return this.findPeople().stream().map(p -> new PersonDto(p.getId(), p.getName(), p.getBalance())).collect(Collectors.toList());
+    }
+
+    public List<Person> findPeople() {
         return StreamSupport.stream(this.personRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
@@ -64,13 +91,7 @@ public class ExpenseService {
         return this.personRepository.findById(id);
     }
 
-    public void updateBalances(Person person, double cost) {
-        Iterable<Person> personIterable = this.personRepository.findAll();
-        long totalPeople = StreamSupport.stream(personIterable.spliterator(), false).count();
-        double individualPart = cost / totalPeople;
-        StreamSupport.stream(personIterable.spliterator(), false).forEach((p) -> {
-            double updateBalance = p.getId() != person.getId() ? individualPart * (-1) : individualPart;
-            p.updateBalance(updateBalance);
-        });
+    private double getTotalCost(){
+        return this.getExpenses().stream().mapToDouble(e -> e.getCost()).sum();
     }
 }

@@ -56,6 +56,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>io.micronaut.test</groupId>
+      <artifactId>micronaut-test-rest-assured</artifactId>
+      <version>3.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-client</artifactId>
       <scope>compile</scope>
@@ -82,12 +88,6 @@
     </dependency>
 
     <!--DATABASE DEPENDENCIES-->
-    <!--<dependency>
-      <groupId>io.micronaut.data</groupId>
-      <version>3.5.0</version>
-      <artifactId>micronaut-data-jdbc</artifactId>
-      <scope>compile</scope>
-    </dependency>-->
     <dependency>
       <groupId>io.micronaut.data</groupId>
       <artifactId>micronaut-data-hibernate-jpa</artifactId>

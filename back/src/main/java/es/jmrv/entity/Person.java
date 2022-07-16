@@ -1,9 +1,10 @@
 package es.jmrv.entity;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.GenerationType.AUTO;
 
@@ -17,17 +18,34 @@ public class Person {
 
     private double balance;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "person")
+    private List<Expense> expenses;
+
     public Person(){
-
+        this.balance = 0;
+        this.expenses = new ArrayList<>();
     }
 
-    public Person(String name, double balance) {
+    public Person(String name) {
         this.name = name;
-        this.balance = balance;
+        this.balance = 0;
+        this.expenses = new ArrayList<>();
     }
 
-    public void updateBalance(double balance){
-        this.balance += balance;
+    public void updateBalance(double individualCost){
+        this.balance = getMyTotalExpense() - individualCost;
+    }
+
+    private double getMyTotalExpense(){
+        double totalExpense = 0;
+        for(Expense e: this.expenses){
+            totalExpense += e.getCost();
+        }
+        return totalExpense;
+    }
+
+    public void addExpense(Expense expense){
+        this.expenses.add(expense);
     }
 
     public Long getId() {
@@ -52,5 +70,13 @@ public class Person {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 }

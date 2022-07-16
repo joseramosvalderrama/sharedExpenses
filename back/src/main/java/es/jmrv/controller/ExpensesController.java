@@ -1,5 +1,7 @@
 package es.jmrv.controller;
 
+import es.jmrv.dto.ExpenseDto;
+import es.jmrv.dto.PersonDto;
 import es.jmrv.entity.Expense;
 import es.jmrv.entity.Person;
 import es.jmrv.service.ExpenseService;
@@ -17,32 +19,34 @@ public class ExpensesController {
     @Inject
     private ExpenseService expenseService;
 
-    @Get("/expenses")
+    @Get("/expense")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Expense> getExpenses(){
-        return this.expenseService.getExpenses();
+    public List<ExpenseDto> getExpenses(){
+        return this.expenseService.getExpensesDto();
     }
 
-    @Post("/{personId}/expenses")
+    @Post("/person/{personId}/expense")
     @Produces(MediaType.APPLICATION_JSON)
-    public HttpResponse<Expense> createExpense(@PathVariable(name = "personId") Long personId, @Body @Valid Expense expense){
-        Optional<Person> person = this.expenseService.findPersonById(personId);
-        if(person.isEmpty()){
+    public HttpResponse createExpense(@PathVariable(name = "personId") Long personId, @Body @Valid Expense expense){
+        Optional<Person> personOp = this.expenseService.findPersonById(personId);
+        if(personOp.isEmpty()){
             return HttpResponse.notFound();
         }
-        this.expenseService.updateBalances(person.get(), expense.getCost());
-        return HttpResponse.created(this.expenseService.saveExpense(personId, expense));
+        Person person = personOp.get();
+        this.expenseService.saveExpense(personId, expense);
+        return HttpResponse.created("Created");
     }
 
     @Post("/person")
     @Produces(MediaType.APPLICATION_JSON)
-    public HttpResponse<Person> createPerson(@Body @Valid Person person){
-        return HttpResponse.created(this.expenseService.savePerson(person));
+    public HttpResponse createPerson(@Body @Valid Person person){
+        this.expenseService.savePerson(person);
+        return HttpResponse.created("Created");
     }
 
     @Get("/person")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Person> getPersonBalances(){
-        return this.expenseService.findPersonBalances();
+    public List<PersonDto> getPersonBalances(){
+        return this.expenseService.findPeopleDtos();
     }
 }

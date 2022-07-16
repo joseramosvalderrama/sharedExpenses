@@ -1,33 +1,20 @@
-package es.jmrv.entity;
-
-import javax.persistence.*;
+package es.jmrv.dto;
 
 import java.util.Date;
 
-import static javax.persistence.GenerationType.AUTO;
-
-@Entity
-public class Expense {
-    @Id
-    @GeneratedValue(strategy = AUTO)
+public class ExpenseDto {
     private Long id;
-
     private double cost;
-
     private String description;
-
     private Date date;
+    private String person;
 
-    @ManyToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
-
-    public Expense(){}
-
-    public Expense(double cost, String description, Date date) {
+    public ExpenseDto(Long id, double cost, String description, Date date, String person) {
+        this.id = id;
         this.cost = cost;
         this.description = description;
         this.date = date;
+        this.person = person;
     }
 
     public Long getId() {
@@ -62,11 +49,11 @@ public class Expense {
         this.date = date;
     }
 
-    public Person getPerson() {
+    public String getPerson() {
         return person;
     }
 
-    public void setPerson(Person person) {
+    public void setPerson(String person) {
         this.person = person;
     }
 }
