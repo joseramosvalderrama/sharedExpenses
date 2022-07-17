@@ -36,7 +36,7 @@ class NewPerson extends React.Component<any, IPerson>{
                 <form onSubmit={this.handleSubmit} action="/">
                     <label>
                     Name:
-                    <input required type="text" value={this.state.name} onChange={this.handleChange}/>
+                    <input required type="text" placeholder='Nombre' value={this.state.name} onChange={this.handleChange}/>
                     </label>
                     <input type="submit" value="Submit" />
                 </form>

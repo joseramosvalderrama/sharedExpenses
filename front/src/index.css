@@ -13,15 +13,16 @@ code {
 }
 
 .App{
-  padding: 0.5 rem;
-  margin: 0.5 rem;
+  padding: 1% 10%;
+  font-size: large;
 }
 
 .links{
-  margin: 0.5rem;
-  left: 86%;
-  position: relative;
-  padding: 0.5rem
+  /*left: 82%;
+  position: relative;*/
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .link{
@@ -30,8 +31,8 @@ code {
 }
 
 .expenses{
-  margin: 0.25rem;
-  padding: 0.25rem;
+  /*margin: 0.25rem;*/
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
 }
@@ -39,20 +40,41 @@ code {
 .expense{
   padding: 0.75rem;
   margin: 0.5rem;
-  border: 1px solid #000;
+  border: 1px solid blue;
+  display: flex;
+  flex-flow: wrap;
+}
+
+.expenseRightItem{
+  width: 50%;
+  text-align: right;
+  padding: 0.5rem 0;
+}
+
+.expenseLeftItem{
+  width: 50%;
+  padding: 0.5rem 0;
 }
 
 .balances{
-  padding: 1rem;
+  padding: 0 1rem;
+}
+
+.duties{
+  padding: 0 1rem;
+}
+
+.duty{
+  padding: 0.5rem 0.25rem;
 }
 
 .balancePositive{
-  padding: 0.25rem;
-  color: #4CAF50;
+  padding: 0.5rem 0.25rem;
+  color: green;
 }
 
 .balanceNegative{
-  padding: 0.25rem;
+  padding: 0.5rem 0.25rem;
   color: red;
 }
 

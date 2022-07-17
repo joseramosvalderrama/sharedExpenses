@@ -75,6 +75,7 @@ class App extends Component<any, IState>{
           </div>
         </div>
         <div className='expenses'>
+          <h3>Gastos</h3>
           {
             this.state.expenses.map(el => {
               return <Expense person = {el.person} cost = {el.cost} description = {el.description} date = {el.date} />;
