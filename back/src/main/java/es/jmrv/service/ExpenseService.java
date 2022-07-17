@@ -25,7 +25,7 @@ public class ExpenseService {
     @Inject
     private PersonRepository personRepository;
 
-    @EventListener
+    /*@EventListener
     void onStartup(ServerStartupEvent event) {
         if(StreamSupport.stream(personRepository.findAll().spliterator(), false).count() == 0){
             Random random = new Random();
@@ -39,7 +39,7 @@ public class ExpenseService {
                         this.saveExpense(p.getId(), expense);
                     });
         }
-    }
+    }*/
 
     public List<ExpenseDto> getExpensesDto(){
         List<ExpenseDto> expenseDtos = new ArrayList<>();
@@ -63,8 +63,6 @@ public class ExpenseService {
         Person person = this.findPersonById(personId).get();
         expense.setPerson(person);
         this.expenseRepository.save(expense);
-        //person.addExpense(expense);
-        //this.personRepository.update(person);
         this.updateBalances();
     }
 
@@ -95,29 +93,6 @@ public class ExpenseService {
     }
 
     public List<Duty> calculateDuties() {
-        return this.calculateDuties(this.findPeople());
-    }
-
-    private List<Duty> calculateDuties(List<Person> personList){
-        List<Duty> duties = new ArrayList<>();
-        Person[] payers = personList.stream()
-                .filter(p -> p.getBalance() > 0)
-                .sorted(Comparator.comparingDouble(Person::getBalance).reversed())
-                .toArray(Person[]::new);
-        Person[] debtors = personList.stream()
-                .filter(p -> p.getBalance() < 0)
-                .sorted(Comparator.comparingDouble(Person::getBalance))
-                .toArray(Person[]::new);
-        int i=0, j=0;
-        while(i < payers.length && j < debtors.length){
-            duties.add(Duty.build(debtors[j], payers[i]));
-            if(payers[i].getBalance() - debtors[j].getBalance() <= 0){
-                i++;
-            }
-            else{
-                j++;
-            }
-        }
-        return duties;
+        return Duty.build(this.findPeople());
     }
 }

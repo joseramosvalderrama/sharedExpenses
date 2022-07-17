@@ -1,15 +1,11 @@
 package es.jmrv.model;
 
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest
 public class DutyTest {
     private Person debtor;
     private Person payer;
