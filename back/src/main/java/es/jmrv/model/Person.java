@@ -1,4 +1,4 @@
-package es.jmrv.entity;
+package es.jmrv.model;
 
 
 import javax.persistence.*;

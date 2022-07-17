@@ -41,10 +41,13 @@ class NewExpense extends React.Component<any, IState>{
     async componentDidMount(){
         try{
             const people = await http<IPerson[]>('/person', 'GET');
-            const newState = {...this.state};
-            newState.people = people;
-            newState.selectedPerson = {value: people[0].id, label: people[0].name};
-            this.setState(newState);
+            this.setState({
+                people: people,
+                selectedPerson: {
+                    value: people[0].id,
+                    label: people[0].name
+                }
+            });
           }
           catch(error){
             alert(error);

@@ -4,15 +4,14 @@ import IExpense from 'IExpense';
 import Expense from 'Expense';
 import { Link } from 'react-router-dom';
 import Balance from 'Balance';
+import Duty from 'Duty';
+import IBalance from 'IBalance';
+import IDuty from 'IDuty';
 
 interface IState{
   expenses: IExpense[],
-  balances: IBalance[]
-}
-
-interface IBalance{
-  name: string,
-  balance: number
+  balances: IBalance[],
+  duties: IDuty[]
 }
 
 class App extends Component<any, IState>{
@@ -21,21 +20,21 @@ class App extends Component<any, IState>{
     super(props);
     this.state = {
       expenses: [],
-      balances: []
+      balances: [],
+      duties: []
     }
   }
 
-  async componentDidMount(){
+  componentDidMount(){
     this.retrieveExpenses();
     this.retrieveBalances();
+    this.retrieveDuties();
   }
 
   async retrieveBalances(){
     try{
       const balances = await http<IBalance[]>('/person', 'GET');
-      const newState = {...this.state};
-      newState.balances = balances;
-      this.setState(newState);
+      this.setState({balances: balances});
     }
     catch(error){
       alert(error);
@@ -46,9 +45,17 @@ class App extends Component<any, IState>{
     try{
       const expenses = await http<IExpense[]>('/expense', 'GET');
       expenses.sort((a,b) => b.date - a.date);
-      const newState = {...this.state};
-      newState.expenses = expenses;
-      this.setState(newState);
+      this.setState({expenses: expenses});
+    }
+    catch(error){
+      alert(error);
+    }
+  }
+
+  async retrieveDuties(){
+    try{
+      const duties = await http<IDuty[]>('/duty', 'GET');
+      this.setState({duties: duties});
     }
     catch(error){
       alert(error);
@@ -79,6 +86,14 @@ class App extends Component<any, IState>{
           {
             this.state.balances.map(el => {
               return <Balance name={el.name} balance={el.balance}/>;
+            })
+          }
+        </div>
+        <div className='duties'>
+          <h3>Deudas</h3>
+          {
+            this.state.duties.map(el => {
+              return <Duty debtor={el.debtor} payer={el.payer} amount={el.amount}/>
             })
           }
         </div>

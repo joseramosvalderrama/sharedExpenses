@@ -5,6 +5,8 @@ public class PersonDto {
     private String name;
     private double balance;
 
+    public PersonDto(){}
+
     public PersonDto(Long id, String name, double balance) {
         this.id = id;
         this.name = name;

@@ -1,9 +1,10 @@
 package es.jmrv.controller;
 
+import es.jmrv.model.Duty;
 import es.jmrv.dto.ExpenseDto;
 import es.jmrv.dto.PersonDto;
-import es.jmrv.entity.Expense;
-import es.jmrv.entity.Person;
+import es.jmrv.model.Expense;
+import es.jmrv.model.Person;
 import es.jmrv.service.ExpenseService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -48,5 +49,11 @@ public class ExpensesController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<PersonDto> getPersonBalances(){
         return this.expenseService.findPeopleDtos();
+    }
+
+    @Get("/duty")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Duty> getDuties(){
+        return this.expenseService.calculateDuties();
     }
 }

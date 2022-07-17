@@ -1,9 +1,10 @@
 package es.jmrv.service;
 
+import es.jmrv.model.Duty;
 import es.jmrv.dto.ExpenseDto;
 import es.jmrv.dto.PersonDto;
-import es.jmrv.entity.Expense;
-import es.jmrv.entity.Person;
+import es.jmrv.model.Expense;
+import es.jmrv.model.Person;
 import es.jmrv.repository.ExpenseRepository;
 import es.jmrv.repository.PersonRepository;
 import io.micronaut.runtime.event.annotation.EventListener;
@@ -12,19 +13,17 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Singleton
 public class ExpenseService {
     @Inject
-    ExpenseRepository expenseRepository;
+    private ExpenseRepository expenseRepository;
 
     @Inject
-    PersonRepository personRepository;
+    private PersonRepository personRepository;
 
     @EventListener
     void onStartup(ServerStartupEvent event) {
@@ -93,5 +92,32 @@ public class ExpenseService {
 
     private double getTotalCost(){
         return this.getExpenses().stream().mapToDouble(e -> e.getCost()).sum();
+    }
+
+    public List<Duty> calculateDuties() {
+        return this.calculateDuties(this.findPeople());
+    }
+
+    private List<Duty> calculateDuties(List<Person> personList){
+        List<Duty> duties = new ArrayList<>();
+        Person[] payers = personList.stream()
+                .filter(p -> p.getBalance() > 0)
+                .sorted(Comparator.comparingDouble(Person::getBalance).reversed())
+                .toArray(Person[]::new);
+        Person[] debtors = personList.stream()
+                .filter(p -> p.getBalance() < 0)
+                .sorted(Comparator.comparingDouble(Person::getBalance))
+                .toArray(Person[]::new);
+        int i=0, j=0;
+        while(i < payers.length && j < debtors.length){
+            duties.add(Duty.build(debtors[j], payers[i]));
+            if(payers[i].getBalance() - debtors[j].getBalance() <= 0){
+                i++;
+            }
+            else{
+                j++;
+            }
+        }
+        return duties;
     }
 }

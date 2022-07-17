@@ -9,6 +9,8 @@ public class ExpenseDto {
     private Date date;
     private String person;
 
+    public ExpenseDto(){}
+
     public ExpenseDto(Long id, double cost, String description, Date date, String person) {
         this.id = id;
         this.cost = cost;
