@@ -1,6 +1,6 @@
 import React from 'react';
-import http from 'RestClient';
-import IExpense from 'IExpense';
+import http from 'fetch/RestClient';
+import IExpense from 'interface/IExpense';
 import Select, { OptionsOrGroups } from 'react-select';
 
 interface IState{

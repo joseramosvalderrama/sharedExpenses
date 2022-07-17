@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './routes/App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NewExpense from 'routes/NewExpense';
 import NewPerson from 'routes/NewPerson';

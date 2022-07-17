@@ -1,4 +1,4 @@
-import IDuty from 'IDuty';
+import IDuty from 'interface/IDuty';
 
 export default function Expense(props: IDuty){
     return (

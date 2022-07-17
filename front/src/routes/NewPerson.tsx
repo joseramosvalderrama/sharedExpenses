@@ -1,5 +1,5 @@
 import React from 'react';
-import http from 'RestClient';
+import http from 'fetch/RestClient';
 
 interface IPerson {
     name: string

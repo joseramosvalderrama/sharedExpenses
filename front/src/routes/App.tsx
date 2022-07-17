@@ -1,12 +1,12 @@
 import React, {Component, ReactNode} from 'react';
-import http from 'RestClient';
-import IExpense from 'IExpense';
-import Expense from 'Expense';
+import http from 'fetch/RestClient';
+import IExpense from 'interface/IExpense';
+import Expense from 'component/expense/Expense';
 import { Link } from 'react-router-dom';
-import Balance from 'Balance';
-import Duty from 'Duty';
-import IBalance from 'IBalance';
-import IDuty from 'IDuty';
+import Balance from 'component/balance/Balance';
+import Duty from 'component/duty/Duty';
+import IBalance from 'interface/IBalance';
+import IDuty from 'interface/IDuty';
 
 interface IState{
   expenses: IExpense[],

@@ -1,5 +1,5 @@
 import React from 'react';
-import IExpense from 'IExpense';
+import IExpense from 'interface/IExpense';
 
 export default function Expense(props: IExpense){
     const diffTime = new Date().getTime() - new Date(props.date).getTime();
