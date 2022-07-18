@@ -7,8 +7,6 @@ import es.jmrv.model.Expense;
 import es.jmrv.model.Person;
 import es.jmrv.repository.ExpenseRepository;
 import es.jmrv.repository.PersonRepository;
-import io.micronaut.runtime.event.annotation.EventListener;
-import io.micronaut.runtime.server.event.ServerStartupEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -24,22 +22,6 @@ public class ExpenseService {
 
     @Inject
     private PersonRepository personRepository;
-
-    /*@EventListener
-    void onStartup(ServerStartupEvent event) {
-        if(StreamSupport.stream(personRepository.findAll().spliterator(), false).count() == 0){
-            Random random = new Random();
-            Person p1 = new Person("Pepito");
-            Person p2 = new Person("Manolito");
-
-            StreamSupport.stream(this.personRepository.saveAll(Arrays.asList(p1, p2)).spliterator(), false)
-                    .forEach(p -> {
-                        double cost = random.nextDouble(10);
-                        Expense expense = new Expense(cost, "Expense by " + p.getName(), new Date());
-                        this.saveExpense(p.getId(), expense);
-                    });
-        }
-    }*/
 
     public List<ExpenseDto> getExpensesDto(){
         List<ExpenseDto> expenseDtos = new ArrayList<>();

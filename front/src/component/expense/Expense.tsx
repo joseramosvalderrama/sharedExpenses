@@ -1,4 +1,3 @@
-import React from 'react';
 import IExpense from 'interface/IExpense';
 
 export default function Expense(props: IExpense){

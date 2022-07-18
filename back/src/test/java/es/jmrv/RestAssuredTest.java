@@ -9,12 +9,10 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 
 import jakarta.inject.Inject;
 
 import java.util.Date;
-import java.util.List;
 
 @MicronautTest
 class RestAssuredTest {
