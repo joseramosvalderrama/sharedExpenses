@@ -14,11 +14,11 @@ $ docker run --name mysql -d -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=expen
 ## Launch backend app
 ```
 $ cd back
-$ docker run -p 8080:8080 --network=host shared_expenses_back:0.1.0
+$ docker run -p 8080:8080 -d --network=host shared_expenses_back:0.1.0
 ```
 ## Launch frontend app
 ```
 $ cd front
-$ docker run -p 3000:3000 --network=host shared_expenses_front:0.1.0
+$ docker run -p 3000:3000 -d --network=host shared_expenses_front:0.1.0
 ```
 
