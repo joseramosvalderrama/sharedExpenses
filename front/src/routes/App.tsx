@@ -62,6 +62,20 @@ class App extends Component<any, IState>{
     }
   }
 
+  async deleteExpense(id: number){
+    try{
+      await http<any>("/expense/" + id, 'DELETE');
+    }
+    catch(error){
+      alert(error);
+    }
+  }
+
+  async onDeleteExpense(id: number){
+    await this.deleteExpense(id);
+    this.retrieveExpenses();
+  }
+
   render(): ReactNode {
     return(
       <div className='App'>
@@ -78,7 +92,7 @@ class App extends Component<any, IState>{
           <h3>Gastos</h3>
           {
             this.state.expenses.map(el => {
-              return <Expense person = {el.person} cost = {el.cost} description = {el.description} date = {el.date} />;
+              return <Expense onDelete={() => this.onDeleteExpense(el.id)} id = {el.id} person = {el.person} cost = {el.cost} description = {el.description} date = {el.date} />;
             })
           }
         </div>

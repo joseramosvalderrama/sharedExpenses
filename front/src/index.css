@@ -56,6 +56,16 @@ code {
   padding: 0.5rem 0;
 }
 
+.expenseLeftItem button{
+  background-color: #f44336;
+  font-size: 1rem;
+  border-radius: 10%;
+}
+
+.expenseLeftItem button:hover{
+  background-color: white;
+}
+
 .balances{
   padding: 0 1rem;
 }
