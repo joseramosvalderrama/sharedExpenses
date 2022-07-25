@@ -17,30 +17,9 @@ public class Duty {
         this.amount = amount;
     }
 
-    public static List<Duty> build(List<Person> personList){
-        List<Duty> duties = new ArrayList<>();
-        Person[] payers = personList.stream()
-                .filter(p -> p.getBalance() > 0)
-                .sorted(Comparator.comparingDouble(Person::getBalance).reversed())
-                .toArray(Person[]::new);
-        Person[] debtors = personList.stream()
-                .filter(p -> p.getBalance() < 0)
-                .sorted(Comparator.comparingDouble(Person::getBalance))
-                .toArray(Person[]::new);
-        int i=0, j=0;
-        while(i < payers.length && j < debtors.length){
-            duties.add(build(debtors[j], payers[i]));
-            if((payers[i].getBalance() - debtors[j].getBalance() * (-1)) <= 0){
-                i++;
-            }
-            else{
-                j++;
-            }
-        }
-        return duties;
-    }
-
-    protected static Duty build(Person debtor, Person payer){
+    public void build(Person debtor, Person payer){
+        this.debtor = debtor.getName();
+        this.payer = payer.getName();
         double rest = payer.getBalance() - debtor.getBalance() * (-1);
         double debt = 0;
         if(rest < 0){
@@ -53,7 +32,7 @@ public class Duty {
             payer.setBalance(rest);
             debtor.setBalance(0);
         }
-        return new Duty(debtor.getName(), payer.getName(), debt);
+        this.amount = debt;
     }
 
     public String getDebtor() {

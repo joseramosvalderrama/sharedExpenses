@@ -1,5 +1,7 @@
 package es.jmrv.model;
 
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,9 +10,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DutyListTest {
+@MicronautTest
+public class DutyBuilderTest {
 
     private List<Person> personList;
+
+    @Inject
+    private DutyBuilder dutyBuilder;
 
     @BeforeEach
     void setup(){
@@ -19,14 +25,14 @@ public class DutyListTest {
 
     @Test
     void givenEmptyListThenEmptyDuties(){
-        List<Duty> duties = Duty.build(personList);
+        List<Duty> duties = dutyBuilder.build(personList);
         assertEquals(0, duties.size());
     }
 
     @Test
     void givenOnePersonThenEmptyDuties(){
         personList.add(new Person("Manolo"));
-        List<Duty> duties = Duty.build(personList);
+        List<Duty> duties = dutyBuilder.build(personList);
         assertEquals(0, duties.size());
     }
 
@@ -39,7 +45,7 @@ public class DutyListTest {
         payer1.setBalance(8.5);
         payer2.setBalance(8);
         personList.addAll(List.of(payer1,debtor1, payer2));
-        List<Duty> duties = Duty.build(personList);
+        List<Duty> duties = dutyBuilder.build(personList);
         assertEquals(2, duties.size());
         assertEquals(8.5, duties.get(0).getAmount());
         assertEquals(8, duties.get(1).getAmount());
@@ -54,7 +60,7 @@ public class DutyListTest {
         payer1.setBalance(17);
         debtor2.setBalance(-8);
         personList.addAll(List.of(debtor2,payer1,debtor1));
-        List<Duty> duties = Duty.build(personList);
+        List<Duty> duties = dutyBuilder.build(personList);
         assertEquals(2, duties.size());
         assertEquals(9, duties.get(0).getAmount());
         assertEquals(8, duties.get(1).getAmount());
@@ -71,7 +77,7 @@ public class DutyListTest {
         payer2.setBalance(24);
         debtor2.setBalance(-16);
         personList.addAll(List.of(debtor2,payer1,debtor1,payer2));
-        List<Duty> duties = Duty.build(personList);
+        List<Duty> duties = dutyBuilder.build(personList);
         assertEquals(3, duties.size());
         assertEquals(24, duties.get(0).getAmount());
         assertEquals(1, duties.get(1).getAmount());

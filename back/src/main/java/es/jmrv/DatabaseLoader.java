@@ -4,6 +4,7 @@ import es.jmrv.model.Expense;
 import es.jmrv.model.Person;
 import es.jmrv.repository.PersonRepository;
 import es.jmrv.service.ExpenseService;
+import es.jmrv.service.PersonService;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.runtime.server.event.ServerStartupEvent;
 import jakarta.inject.Inject;
@@ -22,6 +23,9 @@ public class DatabaseLoader {
     @Inject
     private ExpenseService expenseService;
 
+    @Inject
+    private PersonService personService;
+
     @EventListener
     void onStartup(ServerStartupEvent event) {
         if(StreamSupport.stream(personRepository.findAll().spliterator(), false).count() == 0){
@@ -33,8 +37,9 @@ public class DatabaseLoader {
                     .forEach(p -> {
                         double cost = random.nextDouble(10);
                         Expense expense = new Expense(cost, "Expense by " + p.getName(), new Date());
-                        this.expenseService.saveExpense(p.getId(), expense);
+                        this.expenseService.save(p, expense);
                     });
+            personService.updateBalances();
         }
     }
 }

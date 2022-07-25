@@ -36,7 +36,7 @@ class RestAssuredTest {
 
     @Test
     public void testPostExpense(RequestSpecification spec) throws Exception{
-        Person person = new Person("Pepito");
+        Person person = new Person("Assured_Person");
         spec
                 .request()
                 .body(objectMapper.writeValueAsString(person))
@@ -75,7 +75,7 @@ class RestAssuredTest {
 
     @Test
     public void testPostPerson(RequestSpecification spec) throws JsonProcessingException {
-        Person person = new Person("Pepito");
+        Person person = new Person("Assured_Person_2");
         spec
                 .request()
                 .body(objectMapper.writeValueAsString(person))

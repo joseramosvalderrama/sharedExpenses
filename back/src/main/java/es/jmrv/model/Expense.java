@@ -1,6 +1,7 @@
 package es.jmrv.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 import java.util.Date;
 
@@ -12,6 +13,7 @@ public class Expense {
     @GeneratedValue(strategy = AUTO)
     private Long id;
 
+    @Min(0)
     private double cost;
 
     private String description;

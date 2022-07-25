@@ -20,7 +20,8 @@ public class DutyTest {
     void givenABiggerPayerThenDutyisEqualtoDebtor(){
            debtor.setBalance(-4);
            payer.setBalance(5);
-           Duty duty = Duty.build(debtor, payer);
+           Duty duty = new Duty();
+           duty.build(debtor, payer);
            assertEquals(4, duty.getAmount());
            assertEquals("Debtor", duty.getDebtor());
            assertEquals("Payer", duty.getPayer());
@@ -30,7 +31,8 @@ public class DutyTest {
     void givenABiggerDebtorThenDutyisEqualtoPayer(){
         debtor.setBalance(-8);
         payer.setBalance(5);
-        Duty duty = Duty.build(debtor, payer);
+        Duty duty = new Duty();
+        duty.build(debtor, payer);
         assertEquals(5, duty.getAmount());
         assertEquals("Debtor", duty.getDebtor());
         assertEquals("Payer", duty.getPayer());

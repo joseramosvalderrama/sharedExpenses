@@ -6,6 +6,7 @@ import es.jmrv.dto.PersonDto;
 import es.jmrv.model.Expense;
 import es.jmrv.model.Person;
 import es.jmrv.service.ExpenseService;
+import es.jmrv.service.PersonService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
@@ -20,40 +21,63 @@ public class ExpensesController {
     @Inject
     private ExpenseService expenseService;
 
+    @Inject
+    private PersonService personService;
+
     @Get("/expense")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ExpenseDto> getExpenses(){
-        return this.expenseService.getExpensesDto();
+        return this.expenseService.findAllDto();
     }
 
     @Post("/person/{personId}/expense")
-    @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse createExpense(@PathVariable(name = "personId") Long personId, @Body @Valid Expense expense){
-        Optional<Person> personOp = this.expenseService.findPersonById(personId);
+        Optional<Person> personOp = this.personService.findById(personId);
         if(personOp.isEmpty()){
             return HttpResponse.notFound();
         }
-        Person person = personOp.get();
-        this.expenseService.saveExpense(personId, expense);
+        this.expenseService.save(personOp.get(), expense);
+        this.personService.updateBalances();
         return HttpResponse.created("Created");
     }
 
+    @Delete("/expense/{expenseId}")
+    public HttpResponse deleteExpense(@PathVariable(name = "expenseId") Long expenseId){
+        Optional<Expense> expenseOp = this.expenseService.findById(expenseId);
+        if(expenseOp.isEmpty()){
+            return HttpResponse.notFound();
+        }
+        this.expenseService.delete(expenseOp.get());
+        this.personService.updateBalances();
+        return HttpResponse.created("Deleted");
+    }
+
     @Post("/person")
-    @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse createPerson(@Body @Valid Person person){
-        this.expenseService.savePerson(person);
+        this.personService.save(person);
         return HttpResponse.created("Created");
     }
 
     @Get("/person")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<PersonDto> getPersonBalances(){
-        return this.expenseService.findPeopleDtos();
+    public List<PersonDto> getPeople(){
+        return this.personService.findAllDto();
+    }
+
+    @Delete("/person/{personId}")
+    public HttpResponse deletePerson(@PathVariable(name = "personId") Long personId){
+        Optional<Person> personOp = this.personService.findById(personId);
+        if(personOp.isEmpty()){
+            return HttpResponse.notFound();
+        }
+        this.personService.delete(personOp.get());
+        this.personService.updateBalances();
+        return HttpResponse.created("Deleted");
     }
 
     @Get("/duty")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Duty> getDuties(){
-        return this.expenseService.calculateDuties();
+        return this.personService.calculateDuties();
     }
 }

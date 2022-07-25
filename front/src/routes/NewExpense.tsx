@@ -98,7 +98,7 @@ class NewExpense extends React.Component<any, IState>{
                     <h2>Nuevo gasto</h2>
                     <label>
                         Cost (€):
-                        <input type="number" value={this.state.expense.cost} onChange={this.handleExpenseChange}/>
+                        <input type="number" min="0" step="0.01" value={this.state.expense.cost} onChange={this.handleExpenseChange}/>
                     </label>
                     <label>
                         Description:

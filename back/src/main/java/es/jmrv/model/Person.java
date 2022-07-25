@@ -14,6 +14,7 @@ public class Person {
     @GeneratedValue(strategy = AUTO)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private double balance;
@@ -36,7 +37,7 @@ public class Person {
         this.balance = getMyTotalExpense() - individualCost;
     }
 
-    private double getMyTotalExpense(){
+    public double getMyTotalExpense(){
         double totalExpense = 0;
         for(Expense e: this.expenses){
             totalExpense += e.getCost();
