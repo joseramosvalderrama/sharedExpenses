@@ -9,4 +9,4 @@ FROM openjdk:17-jdk-slim
 WORKDIR /usr/src/app/
 COPY --from=builder /project/target/*.jar /usr/src/app/
 EXPOSE 8080
-CMD [ "java", "-jar", "sharedExpenses-0.1.0.jar" ]
+CMD [ "java", "-jar", "sharedExpenses-1.0.0.jar" ]
