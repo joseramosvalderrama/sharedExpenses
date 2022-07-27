@@ -3,10 +3,10 @@ services:
   front:
     build: front/
     ports:
-      - 3000:3000
-    environment:
-      - REACT_APP_BACK_HOST=localhost
-      - REACT_APP_BACK_PORT=8080
+      - 80:80
+    # environment:
+    #   - REACT_APP_BACK_HOST=localhost
+    #   - REACT_APP_BACK_PORT=8080
     depends_on:
       - back
   back:
